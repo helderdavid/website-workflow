@@ -1,0 +1,10 @@
+{
+  "name": "website-test",
+  "version": "0.0.1",
+  "description": "First Website Test",
+  "repository": {
+    "type": "git",
+    "url": "?.git"
+  },
+  "author": "David Helder",
+}
