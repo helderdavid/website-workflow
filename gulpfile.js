@@ -20,7 +20,6 @@ var sassSources = ['components/sass/style.scss'];
 		gutil.log('Website workflow started');
 	});
 
-
 	gulp.task('coffee',function(){
 		gulp.src(coffeeSources)
 			.pipe(coffee({ bare: true })
@@ -28,7 +27,7 @@ var sassSources = ['components/sass/style.scss'];
 			.pipe(gulp.dest('components/scripts'))
 	});
 
-	gulp.task('çoncat',function(){
+	gulp.task('js',function(){
 		gulp.src(jsSources)
 			.pipe(concat('script.js')
 				.on('error jsConcat', gutil.log)
@@ -49,3 +48,5 @@ var sassSources = ['components/sass/style.scss'];
 			)
 			.pipe(gulp.dest('builds/development/css'))
 	});
+	
+	gulp.task('default',['coffee','js','compass']);
