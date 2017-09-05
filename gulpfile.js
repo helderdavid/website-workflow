@@ -115,7 +115,7 @@ var	coffeeSources 	= ['components/coffee/*.coffee'],
 
 	gulp.task('connect',function(){
 		connect.server({
-			root: outputDir + '',
+			root: outputDir,
 			livereload: true,
     		port: 3000	
 		});
