@@ -1,10 +1,10 @@
-var gulp = require('gulp'),
-	gutil = require('gulp-util'),
-	coffee = require('gulp-coffee'),
-	browserify = require('gulp-browserify'),
-	compass = require('gulp-compass'),
-	connect = require('gulp-connect'),
-	concat = require('gulp-concat');
+var gulp 		= require('gulp'),
+	gutil 		= require('gulp-util'),
+	coffee 		= require('gulp-coffee'),
+	browserify 	= require('gulp-browserify'),
+	compass 	= require('gulp-compass'),
+	connect 	= require('gulp-connect'),
+	concat 		= require('gulp-concat');
 
 var coffeeSources = ['components/coffee/*.coffee'];
 
@@ -16,6 +16,8 @@ var jsSources = [
 ];
 
 var sassSources = ['components/sass/style.scss'];
+var htmlSources = ['builds/development/*.html'];
+var dataSources = ['builds/development/js/*.json'];
 
 	gulp.task('log',function(){
 		gutil.log('Website workflow started');
@@ -24,7 +26,8 @@ var sassSources = ['components/sass/style.scss'];
 	gulp.task('coffee',function(){
 		gulp.src(coffeeSources)
 			.pipe(coffee({ bare: true })
-			.on('Error Config', gutil.log))
+				.on('Error Config', gutil.log)
+			)
 			.pipe(gulp.dest('components/scripts'))
 	});
 
@@ -41,25 +44,36 @@ var sassSources = ['components/sass/style.scss'];
 
 	gulp.task('compass',function(){
 		gulp.src(sassSources)
-			.pipe(compass({
-				sass: 'components/sass',
-				image: 'builds/development/images',
-				style: 'expanded'
-			})
+			.pipe(
+				compass({
+					sass: 'components/sass',
+					image: 'builds/development/images',
+					style: 'expanded'
+				})
 				.on('error compass scss', gutil.log)
 			)
 			.pipe(gulp.dest('builds/development/css'))
 			.pipe(connect.reload())
 	});
 
+	gulp.task('html',function(){
+		gulp.src(htmlSources)
+			.pipe(connect.reload());
+	});
+
+	gulp.task('json',function(){
+		gulp.src(dataSources)
+			.pipe(connect.reload());
+	});
 
 
 	gulp.task('watch',function(){
 		gulp.watch(coffeeSources,['coffee']);
 		gulp.watch(jsSources,['js']);
 		gulp.watch('components/sass/*.scss',['compass']);
+		gulp.watch(htmlSources,['html']);
+		gulp.watch(dataSources,['json']);
 	});
-
 
 	gulp.task('connect',function(){
 		connect.server({
