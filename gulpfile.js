@@ -6,18 +6,31 @@ var gulp 		= require('gulp'),
 	connect 	= require('gulp-connect'),
 	concat 		= require('gulp-concat');
 
-var coffeeSources = ['components/coffee/*.coffee'];
+var env = process.env.NODE_ENV || 'production';
+var outputDir,
+	sassStyle;
 
-var jsSources = [
-	'components/scripts/rclick.js',
-	'components/scripts/pixgrid.js',
-	'components/scripts/tagline.js',
-	'components/scripts/template.js'
-];
+	if(env == 'development'){
+		gutil.log('Development envoirment');
 
-var sassSources = ['components/sass/style.scss'];
-var htmlSources = ['builds/development/*.html'];
-var dataSources = ['builds/development/js/*.json'];
+		outputDir = 'builds/development/';
+		sassStyle = 'expanded';
+	}else{
+		gutil.log('Production envoirment');
+
+		outputDir = 'builds/production/';
+		sassStyle = 'compressed';
+	}
+
+var	coffeeSources 	= ['components/coffee/*.coffee'],
+	sassSources 	= ['components/sass/style.scss'],
+	htmlSources 	= [ outputDir + '*.html'],
+	dataSources 	= [ outputDir + 'js/*.json'],
+	jsSources 		= [	'components/scripts/rclick.js',
+						'components/scripts/pixgrid.js',
+						'components/scripts/tagline.js',
+						'components/scripts/template.js'
+					  ];
 
 	gulp.task('log',function(){
 		gutil.log('Website workflow started');
@@ -37,7 +50,7 @@ var dataSources = ['builds/development/js/*.json'];
 				.on('error jsConcat', gutil.log)
 			)
 			.pipe(browserify())
-			.pipe(gulp.dest('builds/development/js'))
+			.pipe(gulp.dest(outputDir + 'js'))
 			.pipe(connect.reload())
 	});
 
@@ -47,12 +60,12 @@ var dataSources = ['builds/development/js/*.json'];
 			.pipe(
 				compass({
 					sass: 'components/sass',
-					image: 'builds/development/images',
-					style: 'expanded'
+					image: outputDir + 'images',
+					style: sassStyle
 				})
 				.on('error compass scss', gutil.log)
 			)
-			.pipe(gulp.dest('builds/development/css'))
+			.pipe(gulp.dest(outputDir + 'css'))
 			.pipe(connect.reload())
 	});
 
@@ -77,7 +90,7 @@ var dataSources = ['builds/development/js/*.json'];
 
 	gulp.task('connect',function(){
 		connect.server({
-			root: 'builds/development/',
+			root: outputDir + '',
 			livereload: true,
     		port: 3000	
 		});
