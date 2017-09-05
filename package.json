@@ -19,5 +19,8 @@
     "gulp-util": "^3.0.8",
     "jquery": "^3.2.1",
     "mustache": "^2.3.0"
+  },
+  "dependencies": {
+    "gulp-minify-html": "^1.0.6"
   }
 }

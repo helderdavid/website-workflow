@@ -6,9 +6,10 @@ var gulp 		= require('gulp'),
 	connect 	= require('gulp-connect'),
 	concat 		= require('gulp-concat'),
 	gulpif 		= require('gulp-if'),
-	uglify 		= require('gulp-uglify');
+	uglify 		= require('gulp-uglify'),
+	minifyHTML	= require('gulp-minify-html');
 
-var env = process.env.NODE_ENV || 'production';
+var env = process.env.NODE_ENV || 'development'; //production
 var outputDir,
 	sassStyle;
 
@@ -73,8 +74,11 @@ var	coffeeSources 	= ['components/coffee/*.coffee'],
 	});
 
 	gulp.task('html',function(){
-		gulp.src(htmlSources)
-			.pipe(connect.reload());
+		gulp.src('builds/development/*.html')
+			.pipe(gulpif(env === 'production', minifyHTML()))
+			.pipe(gulpif(env === 'production', gulp.dest(outputDir)))
+			.pipe(connect.reload())
+
 	});
 
 	gulp.task('json',function(){
@@ -87,7 +91,7 @@ var	coffeeSources 	= ['components/coffee/*.coffee'],
 		gulp.watch(coffeeSources,['coffee']);
 		gulp.watch(jsSources,['js']);
 		gulp.watch('components/sass/*.scss',['compass']);
-		gulp.watch(htmlSources,['html']);
+		gulp.watch('builds/development/*.html',['html']);
 		gulp.watch(dataSources,['json']);
 	});
 
